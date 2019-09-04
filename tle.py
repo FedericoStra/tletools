@@ -62,8 +62,8 @@ class TLE:
     int_desig = _attr.ib(converter=str.strip)
     epoch_year = _attr.ib(converter=_conv_year)
     epoch_day = _attr.ib()
-    mm_dt = _attr.ib()
-    mm_dt2 = _attr.ib()
+    dn_o2 = _attr.ib()
+    ddn_o6 = _attr.ib()
     bstar = _attr.ib()
     set_num = _attr.ib(converter=int)
     inc = _attr.ib()
@@ -71,7 +71,7 @@ class TLE:
     ecc = _attr.ib()
     argp = _attr.ib()
     M = _attr.ib()
-    mm = _attr.ib()
+    n = _attr.ib()
     rev_num = _attr.ib(converter=int)
 
     def ___attrs_post_init__(self):
@@ -107,8 +107,8 @@ class TLE:
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
-            mm_dt=float(line1[33:43]),
-            mm_dt2=_parse_float(line1[44:52]),
+            dn_o2=float(line1[33:43]),
+            ddn_o6=_parse_float(line1[44:52]),
             bstar=_parse_float(line1[53:61]),
             set_num=line1[64:68],
             inc=float(line2[8:16]),
@@ -116,7 +116,7 @@ class TLE:
             ecc=_parse_decimal(line2[26:33]),
             argp=float(line2[34:42]),
             M=float(line2[43:51]),
-            mm=float(line2[52:63]),
+            n=float(line2[52:63]),
             rev_num=line2[63:68])
 
     @classmethod
@@ -192,8 +192,8 @@ class TLEu(TLE):
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
-            mm_dt=_u.Quantity(float(line1[33:43]), _u.cycle / _u.day**2),
-            mm_dt2=_u.Quantity(_parse_float(line1[44:52]), _u.cycle / _u.day**2),
+            dn_o2=_u.Quantity(float(line1[33:43]), _u.cycle / _u.day**2),
+            ddn_o6=_u.Quantity(_parse_float(line1[44:52]), _u.cycle / _u.day**2),
             bstar=_u.Quantity(_parse_float(line1[53:61]), 1 / _u.earthRad),
             set_num=line1[64:68],
             inc=_u.Quantity(float(line2[8:16]), _u.deg),
@@ -201,7 +201,7 @@ class TLEu(TLE):
             ecc=_u.Quantity(_parse_decimal(line2[26:33]), _u.one),
             argp=_u.Quantity(float(line2[34:42]), _u.deg),
             M=_u.Quantity(float(line2[43:51]), _u.deg),
-            mm=_u.Quantity(float(line2[52:63]), _u.cycle / _u.day),
+            n=_u.Quantity(float(line2[52:63]), _u.cycle / _u.day),
             rev_num=line2[63:68])
 
     def to_orbit(self, attractor=_Earth):
