@@ -1,6 +1,7 @@
 from math import pi
 import attr
 
+import numpy as np
 import pandas as pd
 
 from poliastro.core.angles import M_to_nu
