@@ -3,11 +3,11 @@ import attr as _attr
 import numpy as _np
 import pandas as _pd
 
-from poliastro.core.angles import M_to_nu
-from poliastro.twobody import Orbit
-from poliastro.bodies import Earth
+from poliastro.core.angles import M_to_nu as _M_to_nu
+from poliastro.twobody import Orbit as _Orbit
+from poliastro.bodies import Earth as _Earth
 
-from astropy.time import Time, TimeDelta
+from astropy.time import Time as _Time, TimeDelta as _TimeDelta
 import astropy.units as _u
 
 
@@ -79,20 +79,20 @@ class TLE:
     @property
     def epoch(self):
         if self._epoch is None:
-            self._epoch = (Time(str(self.epoch_year)+'-01-01', scale='utc', format='iso')
-                           + TimeDelta(self.epoch_day-1))
+            self._epoch = (_Time(str(self.epoch_year)+'-01-01', scale='utc', format='iso')
+                           + _TimeDelta(self.epoch_day-1))
         return self._epoch
 
     @property
     def a(self):
         if self._epoch is None:
-            self._a = (Earth.k.value / (self.mm * _np.pi / 43200) ** 2) ** (1/3) / 1000
+            self._a = (_Earth.k.value / (self.mm * _np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
     @property
     def nu(self):
         if self._nu is None:
-            self._nu = M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
+            self._nu = _M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
         return self._nu
 
     @classmethod
@@ -146,21 +146,21 @@ class TLE:
             add_epoch(df)
             return df
 
-    def to_orbit(self, attractor=Earth):
-        return Orbit.from_classical(
+    def to_orbit(self, attractor=_Earth):
+        return _Orbit.from_classical(
             attractor=attractor,
-            a=u.Quantity(self.a, u.km),
-            ecc=u.Quantity(self.ecc, u.one),
-            inc=u.Quantity(self.inc, u.deg),
-            raan=u.Quantity(self.raan, u.deg),
-            argp=u.Quantity(self.argp, u.deg),
-            nu=u.Quantity(self.nu, u.deg),
+            a=_u.Quantity(self.a, _u.km),
+            ecc=_u.Quantity(self.ecc, _u.one),
+            inc=_u.Quantity(self.inc, _u.deg),
+            raan=_u.Quantity(self.raan, _u.deg),
+            argp=_u.Quantity(self.argp, _u.deg),
+            nu=_u.Quantity(self.nu, _u.deg),
             epoch=self.epoch)
 
     def asdict(self, computed=False, epoch=False):
         d = _attr.asdict(self)
         if computed:
-            u.update(a=self.a, nu=self.nu)
+            d.update(a=self.a, nu=self.nu)
         if epoch:
             d.update(epoch=self.epoch)
         return d
@@ -171,13 +171,13 @@ class TLEu(TLE):
     @property
     def a(self):
         if self._epoch is None:
-            self._a = (Earth.k.value / self.mm.to_value(u.rad/u.s) ** 2) ** (1/3) * u.m
+            self._a = (_Earth.k.value / self.mm.to_value(_u.rad/_u.s) ** 2) ** (1/3) * _u.m
         return self._a
 
     @property
     def nu(self):
         if self._nu is None:
-            self._nu = M_to_nu(self.M.to_value(u.rad), self.ecc.to_value(u.one)) * RAD2DEG * u.deg
+            self._nu = _M_to_nu(self.M.to_value(_u.rad), self.ecc.to_value(_u.one)) * RAD2DEG * _u.deg
         return self._nu
 
     @classmethod
@@ -189,21 +189,21 @@ class TLEu(TLE):
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
-            mm_dt=u.Quantity(float(line1[33:43]), u.cycle / u.day**2),
-            mm_dt2=u.Quantity(_conv_float(line1[44:52]), u.cycle / u.day**2),
-            bstar=u.Quantity(_conv_float(line1[53:61]), 1 / u.earthRad),
+            mm_dt=_u.Quantity(float(line1[33:43]), _u.cycle / _u.day**2),
+            mm_dt2=_u.Quantity(_conv_float(line1[44:52]), _u.cycle / _u.day**2),
+            bstar=_u.Quantity(_conv_float(line1[53:61]), 1 / _u.earthRad),
             set_num=line1[64:68],
-            inc=u.Quantity(float(line2[8:16]), u.deg),
-            raan=u.Quantity(float(line2[17:25]), u.deg),
-            ecc=u.Quantity(_conv_ecc(line2[26:33]), u.one),
-            argp=u.Quantity(float(line2[34:42]), u.deg),
-            M=u.Quantity(float(line2[43:51]), u.deg),
-            mm=u.Quantity(float(line2[52:63]), u.cycle / u.day),
+            inc=_u.Quantity(float(line2[8:16]), _u.deg),
+            raan=_u.Quantity(float(line2[17:25]), _u.deg),
+            ecc=_u.Quantity(_conv_ecc(line2[26:33]), _u.one),
+            argp=_u.Quantity(float(line2[34:42]), _u.deg),
+            M=_u.Quantity(float(line2[43:51]), _u.deg),
+            mm=_u.Quantity(float(line2[52:63]), _u.cycle / _u.day),
             rev_num=line2[63:68])
 
-    def to_orbit(self):
-        return Orbit.from_classical(
-            Earth,
+    def to_orbit(self, attractor=_Earth):
+        return _Orbit.from_classical(
+            attractor=attractor,
             a=self.a,
             ecc=self.ecc,
             inc=self.inc,
