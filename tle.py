@@ -1,7 +1,7 @@
 from math import pi
 import attr
 
-# import pandas as pd
+import pandas as pd
 
 from poliastro.core.angles import M_to_nu
 from poliastro.twobody import Orbit
@@ -121,22 +121,22 @@ class TLE:
     def loads(cls, string):
         return [cls.from_lines(*l012) for l012 in partition(string.split('\n'), 3)]
 
-    # @classmethod
-    # def load_dataframe(cls, filename, *, epoch=True):
-    #     if isinstance(filename, str):
-    #         with open(filename) as fp:
-    #             df = pd.DataFrame(cls.from_lines(*l012).asdict()
-    #                               for l012 in partition(fp, 3))
-    #             if epoch:
-    #                 add_epoch(df)
-    #             return df
-    #     else:
-    #         df = pd.concat([cls.load_dataframe(fn, epoch=False) for fn in filename],
-    #                        ignore_index=True, join='inner', copy=False)
-    #         df.drop_duplicates(inplace=True)
-    #         df.reset_index(drop=True, inplace=True)
-    #         add_epoch(df)
-    #         return df
+    @classmethod
+    def load_dataframe(cls, filename, *, epoch=True):
+        if isinstance(filename, str):
+            with open(filename) as fp:
+                df = pd.DataFrame(cls.from_lines(*l012).asdict()
+                                  for l012 in partition(fp, 3))
+                if epoch:
+                    add_epoch(df)
+                return df
+        else:
+            df = pd.concat([cls.load_dataframe(fn, epoch=False) for fn in filename],
+                           ignore_index=True, join='inner', copy=False)
+            df.drop_duplicates(inplace=True)
+            df.reset_index(drop=True, inplace=True)
+            add_epoch(df)
+            return df
 
     def to_orbit(self):
         return Orbit.from_classical(

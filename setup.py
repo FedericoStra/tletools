@@ -22,6 +22,7 @@ setup(
     python_requires='>=3.4',
     install_requires=[
         'attrs>=19.0.0',
+        'pandas>=0.24.0',
         'astropy>=3.2.0',
         'poliastro>=0.12.0'
     ],
