@@ -11,8 +11,8 @@ from astropy.time import Time, TimeDelta
 import astropy.units as u
 
 
-deg2rad = pi / 180.
-rad2deg = 180. / pi
+DEG2RAD = pi / 180.
+RAD2DEG = 180. / pi
 
 # def_unit(['cycle', 'cy'], 2.0 * _numpy.pi * si.rad,
 #          namespace=_ns, prefixes=False,
@@ -83,7 +83,7 @@ class TLE:
     def __attrs_post_init__(self):
         self._epoch = None
         self.a = (Earth.k.value / (self.mm * pi / 43200) ** 2) ** (1/3) / 1000
-        self.nu = M_to_nu(self.M * deg2rad, self.ecc) * rad2deg
+        self.nu = M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
 
     @property
     def epoch(self):
