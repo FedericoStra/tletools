@@ -58,6 +58,7 @@ def add_epoch(df):
 class TLE:
     name = attr.ib(converter=str.strip)
     norad = attr.ib(converter=str.strip)
+    classification = attr.ib()
     int_desig = attr.ib(converter=str.strip)
     epoch_year = attr.ib(converter=_conv_year)
     epoch_day = attr.ib()
@@ -92,7 +93,8 @@ class TLE:
     def from_lines(cls, name, line1, line2):
         return cls(
             name=name,
-            norad=line1[2:8],
+            norad=line1[2:7],
+            classification=line1[7],
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
@@ -167,7 +169,8 @@ class TLEu(TLE):
     def from_lines(cls, name, line1, line2):
         return cls(
             name=name,
-            norad=line1[2:8],
+            norad=line1[2:7],
+            classification=line1[7],
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
