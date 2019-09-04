@@ -74,13 +74,10 @@ class TLE:
     mm = attr.ib()
     rev_num = attr.ib(converter=int)
 
-    a = attr.ib(init=False)
-    nu = attr.ib(init=False)
-
     def __attrs_post_init__(self):
         self._epoch = None
-        self.a = (Earth.k.value / (self.mm * pi / 43200) ** 2) ** (1/3) / 1000
-        self.nu = M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
+        self._a = None
+        self._nu = None
 
     @property
     def epoch(self):
@@ -88,6 +85,18 @@ class TLE:
             self._epoch = (Time(str(self.epoch_year)+'-01-01', scale='utc', format='iso')
                            + TimeDelta(self.epoch_day-1))
         return self._epoch
+
+    @property
+    def a(self):
+        if self._epoch is None:
+            self._a = (Earth.k.value / (self.mm * pi / 43200) ** 2) ** (1/3) / 1000
+        return self._a
+
+    @property
+    def nu(self):
+        if self._nu is None:
+            self._nu = M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
+        return self._nu
 
     @classmethod
     def from_lines(cls, name, line1, line2):
@@ -160,10 +169,17 @@ class TLE:
 
 @attr.s
 class TLEu(TLE):
-    def __attrs_post_init__(self):
-        self._epoch = None
-        self.a = (Earth.k.to_value(u.m**3/u.s**2) / self.mm.to_value(u.rad/u.s) ** 2) ** (1/3) * u.m
-        self.nu = M_to_nu(self.M.to_value(u.rad), self.ecc) * u.rad
+    @property
+    def a(self):
+        if self._epoch is None:
+            self._a = (Earth.k.value / self.mm.to_value(u.rad/u.s) ** 2) ** (1/3) * u.m
+        return self._a
+
+    @property
+    def nu(self):
+        if self._nu is None:
+            self._nu = M_to_nu(self.M.to_value(u.rad), self.ecc.to_value(u.one)) * u.rad
+        return self._nu
 
     @classmethod
     def from_lines(cls, name, line1, line2):
