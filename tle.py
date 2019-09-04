@@ -1,19 +1,18 @@
-from math import pi
-import attr
+import attr as _attr
 
-import numpy as np
-import pandas as pd
+import numpy as _np
+import pandas as _pd
 
 from poliastro.core.angles import M_to_nu
 from poliastro.twobody import Orbit
 from poliastro.bodies import Earth
 
 from astropy.time import Time, TimeDelta
-import astropy.units as u
+import astropy.units as _u
 
 
-DEG2RAD = pi / 180.
-RAD2DEG = 180. / pi
+DEG2RAD = _np.pi / 180.
+RAD2DEG = 180. / _np.pi
 
 # def_unit(['cycle', 'cy'], 2.0 * _numpy.pi * si.rad,
 #          namespace=_ns, prefixes=False,
@@ -48,31 +47,31 @@ def partition(iterable, n):
 
 
 def add_epoch(df):
-    df['epoch'] = ((df.epoch_year.values - 1970).astype(np.dtype('datetime64[Y]'))
-                   + ((df.epoch_day.values-1) * 86400*10**6).astype(np.dtype('timedelta64[us]')))
+    df['epoch'] = ((df.epoch_year.values - 1970).astype(_np.dtype('datetime64[Y]'))
+                   + ((df.epoch_day.values-1) * 86400*10**6).astype(_np.dtype('timedelta64[us]')))
 
 
-@attr.s
+@_attr.s
 class TLE:
-    name = attr.ib(converter=str.strip)
-    norad = attr.ib(converter=str.strip)
-    classification = attr.ib()
-    int_desig = attr.ib(converter=str.strip)
-    epoch_year = attr.ib(converter=_conv_year)
-    epoch_day = attr.ib()
-    mm_dt = attr.ib()
-    mm_dt2 = attr.ib()
-    bstar = attr.ib()
-    set_num = attr.ib(converter=int)
-    inc = attr.ib()
-    raan = attr.ib()
-    ecc = attr.ib()
-    argp = attr.ib()
-    M = attr.ib()
-    mm = attr.ib()
-    rev_num = attr.ib(converter=int)
+    name = _attr.ib(converter=str.strip)
+    norad = _attr.ib(converter=str.strip)
+    classification = _attr.ib()
+    int_desig = _attr.ib(converter=str.strip)
+    epoch_year = _attr.ib(converter=_conv_year)
+    epoch_day = _attr.ib()
+    mm_dt = _attr.ib()
+    mm_dt2 = _attr.ib()
+    bstar = _attr.ib()
+    set_num = _attr.ib(converter=int)
+    inc = _attr.ib()
+    raan = _attr.ib()
+    ecc = _attr.ib()
+    argp = _attr.ib()
+    M = _attr.ib()
+    mm = _attr.ib()
+    rev_num = _attr.ib(converter=int)
 
-    def __attrs_post_init__(self):
+    def ___attrs_post_init__(self):
         self._epoch = None
         self._a = None
         self._nu = None
@@ -87,7 +86,7 @@ class TLE:
     @property
     def a(self):
         if self._epoch is None:
-            self._a = (Earth.k.value / (self.mm * pi / 43200) ** 2) ** (1/3) / 1000
+            self._a = (Earth.k.value / (self.mm * _np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
     @property
@@ -134,13 +133,13 @@ class TLE:
     def load_dataframe(cls, filename, *, epoch=True):
         if isinstance(filename, str):
             with open(filename) as fp:
-                df = pd.DataFrame(cls.from_lines(*l012).asdict()
+                df = _pd.DataFrame(cls.from_lines(*l012).asdict()
                                   for l012 in partition(fp, 3))
                 if epoch:
                     add_epoch(df)
                 return df
         else:
-            df = pd.concat([cls.load_dataframe(fn, epoch=False) for fn in filename],
+            df = _pd.concat([cls.load_dataframe(fn, epoch=False) for fn in filename],
                            ignore_index=True, join='inner', copy=False)
             df.drop_duplicates(inplace=True)
             df.reset_index(drop=True, inplace=True)
@@ -159,7 +158,7 @@ class TLE:
             epoch=self.epoch)
 
     def asdict(self, computed=False, epoch=False):
-        d = attr.asdict(self)
+        d = _attr.asdict(self)
         if computed:
             u.update(a=self.a, nu=self.nu)
         if epoch:
@@ -167,7 +166,7 @@ class TLE:
         return d
 
 
-@attr.s
+@_attr.s
 class TLEu(TLE):
     @property
     def a(self):
