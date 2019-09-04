@@ -160,9 +160,11 @@ class TLE:
             nu=u.Quantity(self.nu, u.deg),
             epoch=self.epoch)
 
-    def asdict(self, extra=False):
+    def asdict(self, computed=False, epoch=False):
         d = attr.asdict(self)
-        if extra:
+        if computed:
+            u.update(a=self.a, nu=self.nu)
+        if epoch:
             d.update(epoch=self.epoch)
         return d
 
