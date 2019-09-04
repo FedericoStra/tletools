@@ -160,6 +160,9 @@ class TLE:
             nu=_u.Quantity(self.nu, _u.deg),
             epoch=self.epoch)
 
+    def astuple(self):
+        return _attr.astuple(self)
+
     def asdict(self, computed=False, epoch=False):
         d = _attr.asdict(self)
         if computed:
