@@ -22,10 +22,6 @@ RAD2DEG = 180. / _np.pi
 #          doc="cycle: angular measurement, a full turn or rotation")
 
 
-def _conv_ecc(s):
-    return float("." + s)
-
-
 def _conv_year(s):
     if isinstance(s, int):
         return s
@@ -33,7 +29,11 @@ def _conv_year(s):
     return y + (1900 if y >= 57 else 2000)
 
 
-def _conv_float(s):
+def _parse_decimal(s):
+    return float("." + s)
+
+
+def _parse_float(s):
     return float(s[0] + '.' + s[1:6] + 'e' + s[6:8])
 
 
@@ -108,12 +108,12 @@ class TLE:
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
             mm_dt=float(line1[33:43]),
-            mm_dt2=_conv_float(line1[44:52]),
-            bstar=_conv_float(line1[53:61]),
+            mm_dt2=_parse_float(line1[44:52]),
+            bstar=_parse_float(line1[53:61]),
             set_num=line1[64:68],
             inc=float(line2[8:16]),
             raan=float(line2[17:25]),
-            ecc=_conv_ecc(line2[26:33]),
+            ecc=_parse_decimal(line2[26:33]),
             argp=float(line2[34:42]),
             M=float(line2[43:51]),
             mm=float(line2[52:63]),
@@ -193,12 +193,12 @@ class TLEu(TLE):
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
             mm_dt=_u.Quantity(float(line1[33:43]), _u.cycle / _u.day**2),
-            mm_dt2=_u.Quantity(_conv_float(line1[44:52]), _u.cycle / _u.day**2),
-            bstar=_u.Quantity(_conv_float(line1[53:61]), 1 / _u.earthRad),
+            mm_dt2=_u.Quantity(_parse_float(line1[44:52]), _u.cycle / _u.day**2),
+            bstar=_u.Quantity(_parse_float(line1[53:61]), 1 / _u.earthRad),
             set_num=line1[64:68],
             inc=_u.Quantity(float(line2[8:16]), _u.deg),
             raan=_u.Quantity(float(line2[17:25]), _u.deg),
-            ecc=_u.Quantity(_conv_ecc(line2[26:33]), _u.one),
+            ecc=_u.Quantity(_parse_decimal(line2[26:33]), _u.one),
             argp=_u.Quantity(float(line2[34:42]), _u.deg),
             M=_u.Quantity(float(line2[43:51]), _u.deg),
             mm=_u.Quantity(float(line2[52:63]), _u.cycle / _u.day),
