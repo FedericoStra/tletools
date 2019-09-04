@@ -17,9 +17,9 @@ _dtype_timedelta64_us = _np.dtype('timedelta64[us]')
 DEG2RAD = _np.pi / 180.
 RAD2DEG = 180. / _np.pi
 
-# def_unit(['cycle', 'cy'], 2.0 * _numpy.pi * si.rad,
-#          namespace=_ns, prefixes=False,
-#          doc="cycle: angular measurement, a full turn or rotation")
+_u_rev = _u.def_unit(['rev', 'revolution'], 2.0 * _np.pi * _u.rad,
+                     prefixes=False,
+                     doc="revolution: angular measurement, a full turn or rotation")
 
 
 def _conv_year(s):
@@ -192,8 +192,8 @@ class TLEu(TLE):
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
-            dn_o2=_u.Quantity(float(line1[33:43]), _u.cycle / _u.day**2),
-            ddn_o6=_u.Quantity(_parse_float(line1[44:52]), _u.cycle / _u.day**3),
+            dn_o2=_u.Quantity(float(line1[33:43]), _u_rev / _u.day**2),
+            ddn_o6=_u.Quantity(_parse_float(line1[44:52]), _u_rev / _u.day**3),
             bstar=_u.Quantity(_parse_float(line1[53:61]), 1 / _u.earthRad),
             set_num=line1[64:68],
             inc=_u.Quantity(float(line2[8:16]), _u.deg),
@@ -201,7 +201,7 @@ class TLEu(TLE):
             ecc=_u.Quantity(_parse_decimal(line2[26:33]), _u.one),
             argp=_u.Quantity(float(line2[34:42]), _u.deg),
             M=_u.Quantity(float(line2[43:51]), _u.deg),
-            n=_u.Quantity(float(line2[52:63]), _u.cycle / _u.day),
+            n=_u.Quantity(float(line2[52:63]), _u_rev / _u.day),
             rev_num=line2[63:68])
 
     def to_orbit(self, attractor=_Earth):
