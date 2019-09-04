@@ -193,7 +193,7 @@ class TLEu(TLE):
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
             dn_o2=_u.Quantity(float(line1[33:43]), _u.cycle / _u.day**2),
-            ddn_o6=_u.Quantity(_parse_float(line1[44:52]), _u.cycle / _u.day**2),
+            ddn_o6=_u.Quantity(_parse_float(line1[44:52]), _u.cycle / _u.day**3),
             bstar=_u.Quantity(_parse_float(line1[53:61]), 1 / _u.earthRad),
             set_num=line1[64:68],
             inc=_u.Quantity(float(line2[8:16]), _u.deg),
