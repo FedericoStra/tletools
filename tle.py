@@ -19,10 +19,6 @@ RAD2DEG = 180. / pi
 #          doc="cycle: angular measurement, a full turn or rotation")
 
 
-def _strip(s):
-    return s.strip()
-
-
 def _conv_ecc(s):
     return float("." + s)
 
@@ -60,9 +56,9 @@ def add_epoch(df):
 
 @attr.s
 class TLE:
-    name = attr.ib(converter=_strip)
-    norad = attr.ib(converter=_strip)
-    int_desig = attr.ib(converter=_strip)
+    name = attr.ib(converter=str.strip)
+    norad = attr.ib(converter=str.strip)
+    int_desig = attr.ib(converter=str.strip)
     epoch_year = attr.ib(converter=_conv_year)
     epoch_day = attr.ib()
     mm_dt = attr.ib()
