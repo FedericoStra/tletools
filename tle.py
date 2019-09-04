@@ -11,6 +11,9 @@ from astropy.time import Time as _Time, TimeDelta as _TimeDelta
 import astropy.units as _u
 
 
+_dtype_datetime64_Y = _np.dtype('datetime64[Y]')
+_dtype_timedelta64_us = _np.dtype('timedelta64[us]')
+
 DEG2RAD = _np.pi / 180.
 RAD2DEG = 180. / _np.pi
 
@@ -47,8 +50,8 @@ def partition(iterable, n):
 
 
 def add_epoch(df):
-    df['epoch'] = ((df.epoch_year.values - 1970).astype(_np.dtype('datetime64[Y]'))
-                   + ((df.epoch_day.values-1) * 86400*10**6).astype(_np.dtype('timedelta64[us]')))
+    df['epoch'] = ((df.epoch_year.values - 1970).astype(_dtype_datetime64_Y)
+                   + ((df.epoch_day.values-1) * 86400*10**6).astype(_dtype_timedelta64_us))
 
 
 @_attr.s
