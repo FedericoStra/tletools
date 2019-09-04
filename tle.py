@@ -141,12 +141,12 @@ class TLE:
     def to_orbit(self, attractor=Earth):
         return Orbit.from_classical(
             attractor=attractor,
-            a=self.a * u.km,
-            ecc=self.ecc * u.one,
-            inc=self.inc * u.deg,
-            raan=self.raan * u.deg,
-            argp=self.argp * u.deg,
-            nu=self.nu * u.deg,
+            a=u.Quantity(self.a, u.km),
+            ecc=u.Quantity(self.ecc, u.one),
+            inc=u.Quantity(self.inc, u.deg),
+            raan=u.Quantity(self.raan, u.deg),
+            argp=u.Quantity(self.argp, u.deg),
+            nu=u.Quantity(self.nu, u.deg),
             epoch=self.epoch)
 
     def asdict(self, extra=False):
@@ -175,12 +175,12 @@ class TLEu(TLE):
             mm_dt2=_conv_float(line1[44:52]),
             bstar=_conv_float(line1[53:61]),
             set_num=line1[64:68],
-            inc=float(line2[8:16]) * u.deg,
-            raan=float(line2[17:25]) * u.deg,
-            ecc=_conv_ecc(line2[26:33]) * u.one,
-            argp=float(line2[34:42]) * u.deg,
-            M=float(line2[43:51]) * u.deg,
-            mm=float(line2[52:63]) * 2*pi * u.rad / u.day,
+            inc=u.Quantity(float(line2[8:16]), u.deg),
+            raan=u.Quantity(float(line2[17:25]), u.deg),
+            ecc=u.Quantity(_conv_ecc(line2[26:33]), u.one),
+            argp=u.Quantity(float(line2[34:42]), u.deg),
+            M=u.Quantity(float(line2[43:51]), u.deg),
+            mm=u.Quantity(float(line2[52:63]), u.cycle / u.day),
             rev_num=line2[63:68])
 
     def to_orbit(self):
