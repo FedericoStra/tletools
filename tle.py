@@ -47,11 +47,8 @@ def partition(iterable, n):
 
 
 def add_epoch(df):
-    df['epoch'] = (
-        Time(df.epoch_year.map(lambda y: str(y)+'-01-01').values.astype(dtype='<U10'))
-        + TimeDelta(df.epoch_day-1))
-    df.epoch = df.epoch.apply(lambda e: e.datetime64)
-    return df
+    df['epoch'] = ((df.epoch_year.values - 1970).astype(np.dtype('datetime64[Y]'))
+                   + ((df.epoch_day.values-1) * 86400*10**6).astype(np.dtype('timedelta64[us]')))
 
 
 @attr.s
