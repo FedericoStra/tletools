@@ -180,7 +180,7 @@ class TLEu(TLE):
     @property
     def nu(self):
         if self._nu is None:
-            self._nu = M_to_nu(self.M.to_value(u.rad), self.ecc.to_value(u.one)) * u.rad
+            self._nu = M_to_nu(self.M.to_value(u.rad), self.ecc.to_value(u.one)) * RAD2DEG * u.deg
         return self._nu
 
     @classmethod
