@@ -138,9 +138,9 @@ class TLE:
             add_epoch(df)
             return df
 
-    def to_orbit(self):
+    def to_orbit(self, attractor=Earth):
         return Orbit.from_classical(
-            Earth,
+            attractor=attractor,
             a=self.a * u.km,
             ecc=self.ecc * u.one,
             inc=self.inc * u.deg,
