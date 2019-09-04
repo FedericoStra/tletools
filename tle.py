@@ -1,5 +1,7 @@
-from numpy import pi
-import pandas as pd
+from math import pi
+import attr
+
+# import pandas as pd
 
 from poliastro.core.angles import M_to_nu
 from poliastro.twobody import Orbit
@@ -7,8 +9,6 @@ from poliastro.bodies import Earth
 
 from astropy.time import Time, TimeDelta
 import astropy.units as u
-
-import attr
 
 
 deg2rad = pi / 180.
