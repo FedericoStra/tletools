@@ -90,7 +90,7 @@ class TLE:
     @property
     def a(self):
         if self._epoch is None:
-            self._a = (_Earth.k.value / (self.mm * _np.pi / 43200) ** 2) ** (1/3) / 1000
+            self._a = (_Earth.k.value / (self.n * _np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
     @property
@@ -178,7 +178,7 @@ class TLEu(TLE):
     @property
     def a(self):
         if self._epoch is None:
-            self._a = (_Earth.k.value / self.mm.to_value(_u.rad/_u.s) ** 2) ** (1/3) * _u.m
+            self._a = (_Earth.k.value / self.n.to_value(_u.rad/_u.s) ** 2) ** (1/3) * _u.m
         return self._a
 
     @property
