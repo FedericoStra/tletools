@@ -38,6 +38,12 @@ def _parse_float(s):
 
 
 def partition(iterable, n):
+    """Partition an iterable into tuples.
+
+    :param iterable iterable: The iterable to partition.
+    :param int n: The length of the tuples.
+    :returns: Another iterable.
+    """
     it = iter(iterable)
     while True:
         res = []
@@ -50,11 +56,14 @@ def partition(iterable, n):
 
 
 def add_epoch(df):
+    """Add a column ``'epoch'`` to a dataframe.
+    """
     df['epoch'] = ((df.epoch_year.values - 1970).astype(_dt_dt64_Y)
                    + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
 
 
 def load_dataframe(filename, *, epoch=True):
+    """Load multiple TLEs from one or more files and return a `pandas.DataFrame`."""
     if isinstance(filename, str):
         with open(filename) as fp:
             df = _pd.DataFrame(TLE.from_lines(*l012).asdict()
@@ -78,7 +87,10 @@ class TLE:
     A two-line element set (TLE) is a data format encoding a list of orbital
     elements of an Earth-orbiting object for a given point in time, the epoch.
 
-    Attributes
+    All the attributes parsed from the TLE are expressed in the same units that
+    are used in the TLE format.
+    """
+    """Attributes
     ----------
     name : str
         name of the satellite
@@ -142,6 +154,7 @@ class TLE:
         Return a dict of the attributes.
     """
 
+    #: name of the satellite
     name = _attr.ib(converter=str.strip)
     norad = _attr.ib(converter=str.strip)
     classification = _attr.ib()
@@ -208,6 +221,7 @@ class TLE:
 
     @classmethod
     def load(cls, filename):
+        """Load multiple TLEs from a file."""
         if isinstance(filename, str):
             with open(filename) as fp:
                 return [cls.from_lines(*l012)
@@ -217,9 +231,11 @@ class TLE:
 
     @classmethod
     def loads(cls, string):
+        """Load multiple TLEs from a string."""
         return [cls.from_lines(*l012) for l012 in partition(string.split('\n'), 3)]
 
     def to_orbit(self, attractor=_Earth):
+        """Convert to an orbit around the attractor."""
         return _Orbit.from_classical(
             attractor=attractor,
             a=_u.Quantity(self.a, _u.km),
@@ -231,9 +247,11 @@ class TLE:
             epoch=self.epoch)
 
     def astuple(self):
+        """Return a tuple of the attributes."""
         return _attr.astuple(self)
 
     def asdict(self, computed=False, epoch=False):
+        """Return a dict of the attributes."""
         d = _attr.asdict(self)
         if computed:
             d.update(a=self.a, nu=self.nu)
@@ -244,6 +262,67 @@ class TLE:
 
 @_attr.s
 class TLEu(TLE):
+    """Data class representing a single TLE.
+
+    A two-line element set (TLE) is a data format encoding a list of orbital
+    elements of an Earth-orbiting object for a given point in time, the epoch.
+
+    All the attributes are accompanied by units.
+
+    :param float ecc: Eccentricity of the orbit.
+
+    :param str name:
+        name of the satellite
+
+    :param str norad:
+        NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
+
+    :param str classification:
+        'U', 'C', 'S' for unclassified, classified, secret
+
+    :param str int_desig:
+        international designator (https://en.wikipedia.org/wiki/International_Designator)
+
+
+    :attribute ecc: Eccentricity of the orbit.
+
+    :attribute name: name of the satellite
+
+    :attribute norad: NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
+
+    :attribute classification: 'U', 'C', 'S' for unclassified, classified, secret
+
+    :attribute int_desig: international designator (https://en.wikipedia.org/wiki/International_Designator)
+
+
+    epoch_year : int
+        year of the epoch
+    epoch_day : float
+        day of the year plus fraction of the day
+    dn_o2 : float
+        first time derivative of the mean motion divided by 2
+    ddn_o6 : float
+        second time derivative of the mean motion divided by 6
+    bstar : float
+        BSTAR coefficient (https://en.wikipedia.org/wiki/BSTAR)
+    set_num : int
+        element set number
+    inc : float
+        inclination
+    raan : float
+        right ascension of the ascending node
+    ecc : float
+        eccentricity
+    argp : float
+        argument of perigee
+    M : float
+        mean anomaly
+    n : float
+        mean motion
+    rev_num : int
+        revolution number
+    """
+
     @property
     def a(self):
         if self._epoch is None:
