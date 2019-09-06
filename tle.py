@@ -56,6 +56,75 @@ def add_epoch(df):
 
 @_attr.s
 class TLE:
+    """Data class representing a single TLE.
+
+    A two-line element set (TLE) is a data format encoding a list of orbital
+    elements of an Earth-orbiting object for a given point in time, the epoch.
+
+    Attributes
+    ----------
+    name : str
+        name of the satellite
+    norad : str
+        NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
+    classification : str
+        'U', 'C', 'S' for unclassified, classified, secret
+    int_desig : str
+        international designator (https://en.wikipedia.org/wiki/International_Designator)
+    epoch_year : int
+        year of the epoch
+    epoch_day : float
+        day of the year plus fraction of the day
+    dn_o2 : float
+        first time derivative of the mean motion divided by 2
+    ddn_o6 : float
+        second time derivative of the mean motion divided by 6
+    bstar : float
+        BSTAR coefficient (https://en.wikipedia.org/wiki/BSTAR)
+    set_num : int
+        element set number
+    inc : float
+        inclination
+    raan : float
+        right ascension of the ascending node
+    ecc : float
+        eccentricity
+    argp : float
+        argument of perigee
+    M : float
+        mean anomaly
+    n : float
+        mean motion
+    rev_num : int
+        revolution number
+
+    Properties
+    ----------
+    epoch : astropy.Time
+        epoch of the TLE
+    a : float
+        semi-major axis
+    nu : float
+        true anomaly
+
+    Methods
+    -------
+    from_lines(name, line1, line2)
+        Parse a TLE from its constituent lines.
+    load(filename)
+        Load multiple TLEs from a file.
+    loads(string)
+        Load multiple TLEs from a string.
+    load_dataframe(filename, epoch=True)
+        Load multiples TLEs from one or more files into a `pandas.DataFrame`.
+    to_orbit(attractor=Earth)
+        Return a `poliastro.twobody.Orbit` around the `attractor`.
+    astuple()
+        Return a tuple of the attributes.
+    asdict(computed=False, epoch=False)
+        Return a dict of the attributes.
+    """
+
     name = _attr.ib(converter=str.strip)
     norad = _attr.ib(converter=str.strip)
     classification = _attr.ib()
