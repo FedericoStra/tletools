@@ -82,8 +82,9 @@ class TLE:
     @property
     def epoch(self):
         if self._epoch is None:
-            self._epoch = (_Time(str(self.epoch_year)+'-01-01', scale='utc', format='iso')
-                           + _TimeDelta(self.epoch_day-1))
+            dt = (_np.datetime64(self.epoch_year-1970, 'Y')
+                  + _np.timedelta64(int((self.epoch_day-1) * 86400*10**6), 'us'))
+            self._epoch = _Time(dt, format='datetime64', scale='utc')
         return self._epoch
 
     @property
