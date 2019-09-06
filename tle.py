@@ -7,12 +7,12 @@ from poliastro.core.angles import M_to_nu as _M_to_nu
 from poliastro.twobody import Orbit as _Orbit
 from poliastro.bodies import Earth as _Earth
 
-from astropy.time import Time as _Time, TimeDelta as _TimeDelta
+from astropy.time import Time as _Time
 import astropy.units as _u
 
 
-_dtype_datetime64_Y = _np.dtype('datetime64[Y]')
-_dtype_timedelta64_us = _np.dtype('timedelta64[us]')
+_dt_dt64_Y = _np.dtype('datetime64[Y]')
+_dt_td64_us = _np.dtype('timedelta64[us]')
 
 DEG2RAD = _np.pi / 180.
 RAD2DEG = 180. / _np.pi
@@ -50,8 +50,8 @@ def partition(iterable, n):
 
 
 def add_epoch(df):
-    df['epoch'] = ((df.epoch_year.values - 1970).astype(_dtype_datetime64_Y)
-                   + ((df.epoch_day.values-1) * 86400*10**6).astype(_dtype_timedelta64_us))
+    df['epoch'] = ((df.epoch_year.values - 1970).astype(_dt_dt64_Y)
+                   + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
 
 
 @_attr.s
@@ -82,8 +82,8 @@ class TLE:
     @property
     def epoch(self):
         if self._epoch is None:
-            dt = (_np.datetime64(self.epoch_year-1970, 'Y')
-                  + _np.timedelta64(int((self.epoch_day-1) * 86400*10**6), 'us'))
+            dt = (_np.datetime64(self.epoch_year - 1970, 'Y')
+                  + _np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us'))
             self._epoch = _Time(dt, format='datetime64', scale='utc')
         return self._epoch
 
@@ -138,13 +138,13 @@ class TLE:
         if isinstance(filename, str):
             with open(filename) as fp:
                 df = _pd.DataFrame(cls.from_lines(*l012).asdict()
-                                  for l012 in partition(fp, 3))
+                                   for l012 in partition(fp, 3))
                 if epoch:
                     add_epoch(df)
                 return df
         else:
             df = _pd.concat([cls.load_dataframe(fn, epoch=False) for fn in filename],
-                           ignore_index=True, join='inner', copy=False)
+                            ignore_index=True, join='inner', copy=False)
             df.drop_duplicates(inplace=True)
             df.reset_index(drop=True, inplace=True)
             add_epoch(df)
@@ -184,7 +184,8 @@ class TLEu(TLE):
     @property
     def nu(self):
         if self._nu is None:
-            self._nu = _M_to_nu(self.M.to_value(_u.rad), self.ecc.to_value(_u.one)) * RAD2DEG * _u.deg
+            nu_rad = _M_to_nu(self.M.to_value(_u.rad), self.ecc.to_value(_u.one))
+            self._nu = nu_rad * RAD2DEG * _u.deg
         return self._nu
 
     @classmethod

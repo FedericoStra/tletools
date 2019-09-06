@@ -7,7 +7,7 @@ with open("README.md") as fp:
 
 setup(
     name='TLE-tools',
-    version='0.1.0.post0',
+    version='0.1.1a0',
     description='Library to work with two-line element set files',
     license='MIT',
     author='Federico Stra',
@@ -25,7 +25,11 @@ setup(
         'numpy>=1.16.0',
         'pandas>=0.24.0',
         'astropy>=3.2.0',
-        'poliastro>=0.12.0'
+        'poliastro>=0.12.0',
+    ],
+    tests_require=[
+        'flake8>=3.7.0',
+        'pytest>=5.0.0',
     ],
     extras_require={
         'units': ['astropy>=3.2.0'],
@@ -55,6 +59,6 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Scientific/Engineering',
-        'Topic :: Scientific/Engineering :: Visualization'
+        'Topic :: Scientific/Engineering :: Visualization',
     ],
 )
