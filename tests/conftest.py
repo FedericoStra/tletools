@@ -2,15 +2,18 @@ import pytest
 
 from tle import TLE
 
+
 @pytest.fixture
 def tle_string():
     return """ISS (ZARYA)
 1 25544U 98067A   19249.04864348  .00001909  00000-0  40858-4 0  9990
 2 25544  51.6464 320.1755 0007999  10.9066  53.2893 15.50437522187805"""
 
+
 @pytest.fixture
 def tle_lines(tle_string):
     return tle_string.splitlines()
+
 
 @pytest.fixture
 def tle():
