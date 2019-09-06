@@ -74,7 +74,7 @@ class TLE:
     n = _attr.ib()
     rev_num = _attr.ib(converter=int)
 
-    def ___attrs_post_init__(self):
+    def __attrs_post_init__(self):
         self._epoch = None
         self._a = None
         self._nu = None
