@@ -14,14 +14,14 @@ TLE Classes
 -----------
 
 .. autoclass:: TLE
-   :members:
+    :members:
 
 .. autoclass:: TLEu
-   :members:
+    :members:
 
 
-Extra functions
----------------
+Module functions
+----------------
 
 .. autofunction:: partition
 .. autofunction:: add_epoch

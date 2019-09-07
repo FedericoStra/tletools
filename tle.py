@@ -1,3 +1,7 @@
+"""`TLE-tools` is a small library to work with [two-line element
+set](https://en.wikipedia.org/wiki/Two-line_element_set) files.
+"""
+
 import attr as _attr
 
 import numpy as _np
@@ -42,7 +46,7 @@ def partition(iterable, n):
 
     :param iterable iterable: The iterable to partition.
     :param int n: The length of the tuples.
-    :returns: Another iterable.
+    :returns: A generator which yields subsequent n-uples from the original iterable.
     """
     it = iter(iterable)
     while True:
@@ -57,6 +61,11 @@ def partition(iterable, n):
 
 def add_epoch(df):
     """Add a column ``'epoch'`` to a dataframe.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        :class:`pandas.DataFrame` to modify.
     """
     df['epoch'] = ((df.epoch_year.values - 1970).astype(_dt_dt64_Y)
                    + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
@@ -89,8 +98,8 @@ class TLE:
 
     All the attributes parsed from the TLE are expressed in the same units that
     are used in the TLE format.
-    """
-    """Attributes
+
+    Attributes
     ----------
     name : str
         name of the satellite
@@ -127,8 +136,6 @@ class TLE:
     rev_num : int
         revolution number
 
-    Properties
-    ----------
     epoch : astropy.Time
         epoch of the TLE
     a : float
@@ -152,10 +159,13 @@ class TLE:
         Return a tuple of the attributes.
     asdict(computed=False, epoch=False)
         Return a dict of the attributes.
+
+    ---
     """
 
     #: name of the satellite
     name = _attr.ib(converter=str.strip)
+    #: NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
     norad = _attr.ib(converter=str.strip)
     classification = _attr.ib()
     int_desig = _attr.ib(converter=str.strip)
@@ -180,6 +190,7 @@ class TLE:
 
     @property
     def epoch(self):
+        """Epoch of the TLE property."""
         if self._epoch is None:
             dt = (_np.datetime64(self.epoch_year - 1970, 'Y')
                   + _np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us'))
@@ -188,18 +199,21 @@ class TLE:
 
     @property
     def a(self):
+        """Semi-major axis property."""
         if self._epoch is None:
             self._a = (_Earth.k.value / (self.n * _np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
     @property
     def nu(self):
+        """True anomaly property."""
         if self._nu is None:
             self._nu = _M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
         return self._nu
 
     @classmethod
     def from_lines(cls, name, line1, line2):
+        """Parse a TLE from its constituent lines."""
         return cls(
             name=name,
             norad=line1[2:7],
@@ -325,12 +339,14 @@ class TLEu(TLE):
 
     @property
     def a(self):
+        """Semi-major axis property."""
         if self._epoch is None:
             self._a = (_Earth.k.value / self.n.to_value(_u.rad/_u.s) ** 2) ** (1/3) * _u.m
         return self._a
 
     @property
     def nu(self):
+        """True anomaly property."""
         if self._nu is None:
             nu_rad = _M_to_nu(self.M.to_value(_u.rad), self.ecc.to_value(_u.one))
             self._nu = nu_rad * RAD2DEG * _u.deg
@@ -338,6 +354,7 @@ class TLEu(TLE):
 
     @classmethod
     def from_lines(cls, name, line1, line2):
+        """Parse a TLE from its constituent lines property."""
         return cls(
             name=name,
             norad=line1[2:7],
@@ -358,6 +375,7 @@ class TLEu(TLE):
             rev_num=line2[63:68])
 
     def to_orbit(self, attractor=_Earth):
+        """Convert to an orbit around the attractor."""
         return _Orbit.from_classical(
             attractor=attractor,
             a=self.a,
