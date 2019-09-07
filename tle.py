@@ -55,20 +55,20 @@ def add_epoch(df):
 
 
 def load_dataframe(filename, *, epoch=True):
-        if isinstance(filename, str):
-            with open(filename) as fp:
-                df = _pd.DataFrame(TLE.from_lines(*l012).asdict()
-                                   for l012 in partition(fp, 3))
-                if epoch:
-                    add_epoch(df)
-                return df
-        else:
-            df = _pd.concat([TLE.load_dataframe(fn, epoch=False) for fn in filename],
-                            ignore_index=True, join='inner', copy=False)
-            df.drop_duplicates(inplace=True)
-            df.reset_index(drop=True, inplace=True)
-            add_epoch(df)
+    if isinstance(filename, str):
+        with open(filename) as fp:
+            df = _pd.DataFrame(TLE.from_lines(*l012).asdict()
+                               for l012 in partition(fp, 3))
+            if epoch:
+                add_epoch(df)
             return df
+    else:
+        df = _pd.concat([TLE.load_dataframe(fn, epoch=False) for fn in filename],
+                        ignore_index=True, join='inner', copy=False)
+        df.drop_duplicates(inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        add_epoch(df)
+        return df
 
 
 @_attr.s
