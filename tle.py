@@ -103,75 +103,46 @@ class TLE:
 
     All the attributes parsed from the TLE are expressed in the same units that
     are used in the TLE format.
-
-    Attributes
-    ----------
-    name : str
+    
+    :ivar str name:
         name of the satellite
-    norad : str
+    :ivar str norad:
         NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
-    classification : str
+    :ivar str classification:
         'U', 'C', 'S' for unclassified, classified, secret
-    int_desig : str
+    :ivar str int_desig:
         international designator (https://en.wikipedia.org/wiki/International_Designator)
-    epoch_year : int
+    :ivar int epoch_year:
         year of the epoch
-    epoch_day : float
+    :ivar float epoch_day:
         day of the year plus fraction of the day
-    dn_o2 : float
+    :ivar float dn_o2:
         first time derivative of the mean motion divided by 2
-    ddn_o6 : float
+    :ivar float ddn_o6:
         second time derivative of the mean motion divided by 6
-    bstar : float
+    :ivar float bstar:
         BSTAR coefficient (https://en.wikipedia.org/wiki/BSTAR)
-    set_num : int
+    :ivar int set_num:
         element set number
-    inc : float
+    :ivar float inc:
         inclination
-    raan : float
+    :ivar float raan:
         right ascension of the ascending node
-    ecc : float
+    :ivar float ecc:
         eccentricity
-    argp : float
+    :ivar float argp:
         argument of perigee
-    M : float
+    :ivar float M:
         mean anomaly
-    n : float
+    :ivar float n:
         mean motion
-    rev_num : int
+    :ivar int rev_num:
         revolution number
-
-    epoch : astropy.Time
-        epoch of the TLE
-    a : float
-        semi-major axis
-    nu : float
-        true anomaly
-    """
-    """
-    Methods
-    -------
-    from_lines(name, line1, line2)
-        Parse a TLE from its constituent lines.
-    load(filename)
-        Load multiple TLEs from a file.
-    loads(string)
-        Load multiple TLEs from a string.
-    load_dataframe(filename, epoch=True)
-        Load multiples TLEs from one or more files into a `pandas.DataFrame`.
-    to_orbit(attractor=Earth)
-        Return a `poliastro.twobody.Orbit` around the `attractor`.
-    astuple()
-        Return a tuple of the attributes.
-    asdict(computed=False, epoch=False)
-        Return a dict of the attributes.
-
-    ---
     """
 
-    #: name of the satellite
+    # name of the satellite
     name = _attr.ib(converter=str.strip)
-    #: NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
+    # NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
     norad = _attr.ib(converter=str.strip)
     classification = _attr.ib()
     int_desig = _attr.ib(converter=str.strip)
