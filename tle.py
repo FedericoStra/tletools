@@ -54,6 +54,23 @@ def add_epoch(df):
                    + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
 
 
+def load_dataframe(filename, *, epoch=True):
+        if isinstance(filename, str):
+            with open(filename) as fp:
+                df = _pd.DataFrame(TLE.from_lines(*l012).asdict()
+                                   for l012 in partition(fp, 3))
+                if epoch:
+                    add_epoch(df)
+                return df
+        else:
+            df = _pd.concat([TLE.load_dataframe(fn, epoch=False) for fn in filename],
+                            ignore_index=True, join='inner', copy=False)
+            df.drop_duplicates(inplace=True)
+            df.reset_index(drop=True, inplace=True)
+            add_epoch(df)
+            return df
+
+
 @_attr.s
 class TLE:
     """Data class representing a single TLE.
@@ -201,23 +218,6 @@ class TLE:
     @classmethod
     def loads(cls, string):
         return [cls.from_lines(*l012) for l012 in partition(string.split('\n'), 3)]
-
-    @classmethod
-    def load_dataframe(cls, filename, *, epoch=True):
-        if isinstance(filename, str):
-            with open(filename) as fp:
-                df = _pd.DataFrame(cls.from_lines(*l012).asdict()
-                                   for l012 in partition(fp, 3))
-                if epoch:
-                    add_epoch(df)
-                return df
-        else:
-            df = _pd.concat([cls.load_dataframe(fn, epoch=False) for fn in filename],
-                            ignore_index=True, join='inner', copy=False)
-            df.drop_duplicates(inplace=True)
-            df.reset_index(drop=True, inplace=True)
-            add_epoch(df)
-            return df
 
     def to_orbit(self, attractor=_Earth):
         return _Orbit.from_classical(
