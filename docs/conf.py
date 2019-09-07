@@ -33,7 +33,7 @@ release = '0.1.1'
 extensions = [
     'sphinx.ext.autodoc',
     # 'sphinx.ext.napoleon',
-    'numpydoc',
+    # 'numpydoc',
 ]
 
 autodoc_member_order = 'bysource'

@@ -1,27 +1,26 @@
 .. _api:
 
-Developer Interface
+API Reference
 ===================
 
-.. module:: tle
+.. automodule:: tle
+   :members:
 
 This part of the documentation covers all the interfaces of :mod:`tle`. For
 parts where Requests depends on external libraries, we document the most
 important right here and provide links to the canonical documentation.
 
+::
 
-TLE Classes
------------
+   TLE Classes
+   -----------
 
-.. autoclass:: TLE
-    :members:
-
-.. autoclass:: TLEu
-    :members:
+   .. autoclass:: TLE
 
 
-Module functions
-----------------
+   Module functions
+   ----------------
 
-.. autofunction:: partition
-.. autofunction:: add_epoch
+   .. autofunction:: partition
+   .. autofunction:: add_epoch
+   .. autofunction:: load_dataframe

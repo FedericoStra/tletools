@@ -54,10 +54,6 @@ Links
 - Code: https://github.com/FedericoStra/tletools
 - Issue tracker: https://github.com/FedericoStra/tletools/issues
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
 
 Indices and tables
 ==================
@@ -66,6 +62,11 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   api
 
 The API Documentation / Guide
 -----------------------------
@@ -75,5 +76,5 @@ this part of the documentation is for you.
 
 .. toctree::
    :maxdepth: 2
-
+   
    api

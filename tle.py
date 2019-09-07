@@ -1,5 +1,7 @@
-"""`TLE-tools` is a small library to work with [two-line element
-set](https://en.wikipedia.org/wiki/Two-line_element_set) files.
+"""
+**TLE-tools** is a small library to work with `two-line element set`_ files.
+
+.. _`two-line element set`: https://en.wikipedia.org/wiki/Two-line_element_set
 """
 
 import attr as _attr
@@ -44,8 +46,11 @@ def _parse_float(s):
 def partition(iterable, n):
     """Partition an iterable into tuples.
 
+    The iterable `iterable` is progressively consumed `n` items at a time in order to
+    produce tuples of length `n`.
+
     :param iterable iterable: The iterable to partition.
-    :param int n: The length of the tuples.
+    :param int n: Length of the desired tuples.
     :returns: A generator which yields subsequent n-uples from the original iterable.
     """
     it = iter(iterable)
@@ -62,17 +67,17 @@ def partition(iterable, n):
 def add_epoch(df):
     """Add a column ``'epoch'`` to a dataframe.
 
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        :class:`pandas.DataFrame` to modify.
+    `df` must have columns ``'epoch_year'`` and ``'epoch_day'``, from which the
+    column ``'epoch'`` is computed.
+
+    :param pandas.DataFrame df: :class:`pandas.DataFrame` instance to modify.
     """
     df['epoch'] = ((df.epoch_year.values - 1970).astype(_dt_dt64_Y)
                    + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
 
 
 def load_dataframe(filename, *, epoch=True):
-    """Load multiple TLEs from one or more files and return a `pandas.DataFrame`."""
+    """Load multiple TLEs from one or more files and return a :class:`pandas.DataFrame`."""
     if isinstance(filename, str):
         with open(filename) as fp:
             df = _pd.DataFrame(TLE.from_lines(*l012).asdict()
@@ -142,7 +147,8 @@ class TLE:
         semi-major axis
     nu : float
         true anomaly
-
+    """
+    """
     Methods
     -------
     from_lines(name, line1, line2)
