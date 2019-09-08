@@ -13,8 +13,8 @@ Welcome to TLE-tools's documentation!
 Purpose
 -------
 
-The purpose of the library is to parse TLE sets them into convenient
-:class:`TLE` objects, load entire TLE set files into :class:`pandas.DataFrame`'s, convert
+The purpose of the library is to parse TLE sets into convenient :class:`TLE`
+objects, load entire TLE set files into :class:`pandas.DataFrame`'s, convert
 :class:`TLE` objects into :class:`poliastro.twobody.Orbit`'s, and more.
 
 From Wikipedia_:

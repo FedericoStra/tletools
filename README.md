@@ -5,9 +5,9 @@ set](https://en.wikipedia.org/wiki/Two-line_element_set) files.
 
 ## Purpose
 
-The purpose of the library is to parse TLE sets them into convenient
-`TLE` objects, load entire TLE set files into `pandas.DataFrame`s, convert
-`TLE` objects into `poliastro.twobody.Orbit`s, and more.
+The purpose of the library is to parse TLE sets into convenient `TLE` objects,
+load entire TLE set files into `pandas.DataFrame`'s, convert `TLE` objects into
+`poliastro.twobody.Orbit`'s, and more.
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Two-line_element_set):
 
