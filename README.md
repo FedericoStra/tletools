@@ -46,7 +46,7 @@ pip install -U TLE-tools
 ## Links
 
 - Website: https://github.com/FedericoStra/tletools
-- Documentation: *coming soon*
+- Documentation: https://tletools.readthedocs.io/
 - Releases: https://pypi.org/project/TLE-tools/
 - Code: https://github.com/FedericoStra/tletools
 - Issue tracker: https://github.com/FedericoStra/tletools/issues
