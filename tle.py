@@ -167,7 +167,7 @@ class TLE:
 
     @property
     def epoch(self):
-        """Epoch of the TLE property."""
+        """Epoch of the TLE."""
         if self._epoch is None:
             dt = (_np.datetime64(self.epoch_year - 1970, 'Y')
                   + _np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us'))
@@ -176,21 +176,25 @@ class TLE:
 
     @property
     def a(self):
-        """Semi-major axis property."""
+        """Semi-major axis."""
         if self._epoch is None:
             self._a = (_Earth.k.value / (self.n * _np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
     @property
     def nu(self):
-        """True anomaly property."""
+        """True anomaly."""
         if self._nu is None:
             self._nu = _M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
         return self._nu
 
     @classmethod
     def from_lines(cls, name, line1, line2):
-        """Parse a TLE from its constituent lines."""
+        """Parse a TLE from its constituent lines.
+
+        All the attributes parsed from the TLE are expressed in the same units that
+        are used in the TLE format.
+        """
         return cls(
             name=name,
             norad=line1[2:7],
@@ -253,65 +257,14 @@ class TLE:
 
 @_attr.s
 class TLEu(TLE):
-    """Data class representing a single TLE.
+    """Unitful data class representing a single TLE.
 
-    A two-line element set (TLE) is a data format encoding a list of orbital
-    elements of an Earth-orbiting object for a given point in time, the epoch.
+    This is a subclass of :class:`TLE`, so refer to that class for a description
+    of the attributes and properties.
 
-    All the attributes are accompanied by units.
-
-    :param float ecc: Eccentricity of the orbit.
-
-    :param str name:
-        name of the satellite
-
-    :param str norad:
-        NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
-
-    :param str classification:
-        'U', 'C', 'S' for unclassified, classified, secret
-
-    :param str int_desig:
-        international designator (https://en.wikipedia.org/wiki/International_Designator)
-
-
-    :attribute ecc: Eccentricity of the orbit.
-
-    :attribute name: name of the satellite
-
-    :attribute norad: NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
-
-    :attribute classification: 'U', 'C', 'S' for unclassified, classified, secret
-
-    :attribute int_desig: international designator (https://en.wikipedia.org/wiki/International_Designator)
-
-
-    epoch_year : int
-        year of the epoch
-    epoch_day : float
-        day of the year plus fraction of the day
-    dn_o2 : float
-        first time derivative of the mean motion divided by 2
-    ddn_o6 : float
-        second time derivative of the mean motion divided by 6
-    bstar : float
-        BSTAR coefficient (https://en.wikipedia.org/wiki/BSTAR)
-    set_num : int
-        element set number
-    inc : float
-        inclination
-    raan : float
-        right ascension of the ascending node
-    ecc : float
-        eccentricity
-    argp : float
-        argument of perigee
-    M : float
-        mean anomaly
-    n : float
-        mean motion
-    rev_num : int
-        revolution number
+    The only difference here is that all the attributes are quantities
+    (:class:`astropy.units.Quantity`), a type able to represent a value with
+    an associated unit taken from :mod:`astropy.units`.
     """
 
     @property
