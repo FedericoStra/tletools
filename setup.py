@@ -32,8 +32,19 @@ setup(
         'pytest>=5.0.0',
     ],
     extras_require={
-        'units': ['astropy>=3.2.0'],
-        'orbits': ['poliastro>=0.12.0']
+        'dev': [
+            'pytest',
+            'coverage',
+            'tox',
+            'sphinx',
+            'pallets-sphinx-themes',
+            'sphinxcontrib-log-cabinet',
+            'sphinx-issues',
+        ],
+        'docs': [
+            'sphinx',
+            'sphinx-rtd-theme',
+        ],
     },
     long_description=long_description,
     long_description_content_type='text/markdown',
