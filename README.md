@@ -27,6 +27,33 @@ ISS (ZARYA)
 2 25544  51.6464 320.1755 0007999  10.9066  53.2893 15.50437522187805
 ```
 
+Here is a minimal example on how to load the previous TLE:
+
+```python
+import tle
+
+tle_string = """
+ISS (ZARYA)
+1 25544U 98067A   19249.04864348  .00001909  00000-0  40858-4 0  9990
+2 25544  51.6464 320.1755 0007999  10.9066  53.2893 15.50437522187805
+"""
+
+tle_lines = tle_string.strip().splitlines()
+
+t = tle.TLE.from_lines(*tle_lines)
+```
+
+Then `t` is:
+
+```python
+TLE(name='ISS (ZARYA)', norad='25544', classification='U', int_desig='98067A',
+epoch_year=2019, epoch_day=249.04864348, dn_o2=1.909e-05, ddn_o6=0.0, bstar=4.0858e-05,
+set_num=999, inc=51.6464, raan=320.1755, ecc=0.0007999, argp=10.9066, M=53.2893,
+n=15.50437522, rev_num=18780)
+```
+
+and you can then access its attributes like `t.argp`, `t.epoch`...
+
 ### TLE format specification
 
 Some more or less complete TLE format specifications can be found on the following websites:
