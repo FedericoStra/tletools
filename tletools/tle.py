@@ -23,28 +23,22 @@ TLE(name='ISS (ZARYA)', norad='25544', ..., n=15.50437522, rev_num=18780)
 .. autoclass:: TLEu
 '''
 
-import attr as _attr
+import attr as attr
 
-import numpy as _np
+import numpy as np
+import astropy.units as u
+from astropy.time import Time
 
+# Maybe remove them from here?
 from poliastro.core.angles import M_to_nu as _M_to_nu
 from poliastro.twobody import Orbit as _Orbit
 from poliastro.bodies import Earth as _Earth
 
-from astropy.time import Time as _Time
-import astropy.units as _u
+from .utils import partition, dt_dt64_Y, dt_td64_us, rev as u_rev
 
-from .utils import partition
 
-_dt_dt64_Y = _np.dtype('datetime64[Y]')
-_dt_td64_us = _np.dtype('timedelta64[us]')
-
-DEG2RAD = _np.pi / 180.
-RAD2DEG = 180. / _np.pi
-
-_u_rev = _u.def_unit(['rev', 'revolution'], 2.0 * _np.pi * _u.rad,
-                     prefixes=False,
-                     doc="revolution: angular measurement, a full turn or rotation")
+DEG2RAD = np.pi / 180.
+RAD2DEG = 180. / np.pi
 
 
 def _conv_year(s):
@@ -77,7 +71,7 @@ def _parse_float(s):
     return float(s[0] + '.' + s[1:6] + 'e' + s[6:8])
 
 
-@_attr.s
+@attr.s
 class TLE:
     """Data class representing a single TLE.
 
@@ -124,24 +118,24 @@ class TLE:
     """
 
     # name of the satellite
-    name = _attr.ib(converter=str.strip)
+    name = attr.ib(converter=str.strip)
     # NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
-    norad = _attr.ib(converter=str.strip)
-    classification = _attr.ib()
-    int_desig = _attr.ib(converter=str.strip)
-    epoch_year = _attr.ib(converter=_conv_year)
-    epoch_day = _attr.ib()
-    dn_o2 = _attr.ib()
-    ddn_o6 = _attr.ib()
-    bstar = _attr.ib()
-    set_num = _attr.ib(converter=int)
-    inc = _attr.ib()
-    raan = _attr.ib()
-    ecc = _attr.ib()
-    argp = _attr.ib()
-    M = _attr.ib()
-    n = _attr.ib()
-    rev_num = _attr.ib(converter=int)
+    norad = attr.ib(converter=str.strip)
+    classification = attr.ib()
+    int_desig = attr.ib(converter=str.strip)
+    epoch_year = attr.ib(converter=_conv_year)
+    epoch_day = attr.ib()
+    dn_o2 = attr.ib()
+    ddn_o6 = attr.ib()
+    bstar = attr.ib()
+    set_num = attr.ib(converter=int)
+    inc = attr.ib()
+    raan = attr.ib()
+    ecc = attr.ib()
+    argp = attr.ib()
+    M = attr.ib()
+    n = attr.ib()
+    rev_num = attr.ib(converter=int)
 
     def __attrs_post_init__(self):
         self._epoch = None
@@ -152,16 +146,16 @@ class TLE:
     def epoch(self):
         """Epoch of the TLE."""
         if self._epoch is None:
-            dt = (_np.datetime64(self.epoch_year - 1970, 'Y')
-                  + _np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us'))
-            self._epoch = _Time(dt, format='datetime64', scale='utc')
+            dt = (np.datetime64(self.epoch_year - 1970, 'Y')
+                  + np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us'))
+            self._epoch = Time(dt, format='datetime64', scale='utc')
         return self._epoch
 
     @property
     def a(self):
         """Semi-major axis."""
         if self._epoch is None:
-            self._a = (_Earth.k.value / (self.n * _np.pi / 43200) ** 2) ** (1/3) / 1000
+            self._a = (_Earth.k.value / (self.n * np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
     @property
@@ -216,21 +210,21 @@ class TLE:
         """Convert to an orbit around the attractor."""
         return _Orbit.from_classical(
             attractor=attractor,
-            a=_u.Quantity(self.a, _u.km),
-            ecc=_u.Quantity(self.ecc, _u.one),
-            inc=_u.Quantity(self.inc, _u.deg),
-            raan=_u.Quantity(self.raan, _u.deg),
-            argp=_u.Quantity(self.argp, _u.deg),
-            nu=_u.Quantity(self.nu, _u.deg),
+            a=u.Quantity(self.a, u.km),
+            ecc=u.Quantity(self.ecc, u.one),
+            inc=u.Quantity(self.inc, u.deg),
+            raan=u.Quantity(self.raan, u.deg),
+            argp=u.Quantity(self.argp, u.deg),
+            nu=u.Quantity(self.nu, u.deg),
             epoch=self.epoch)
 
     def astuple(self):
         """Return a tuple of the attributes."""
-        return _attr.astuple(self)
+        return attr.astuple(self)
 
     def asdict(self, computed=False, epoch=False):
         """Return a dict of the attributes."""
-        d = _attr.asdict(self)
+        d = attr.asdict(self)
         if computed:
             d.update(a=self.a, nu=self.nu)
         if epoch:
@@ -238,7 +232,7 @@ class TLE:
         return d
 
 
-@_attr.s
+@attr.s
 class TLEu(TLE):
     """Unitful data class representing a single TLE.
 
@@ -254,15 +248,15 @@ class TLEu(TLE):
     def a(self):
         """Semi-major axis."""
         if self._epoch is None:
-            self._a = (_Earth.k.value / self.n.to_value(_u.rad/_u.s) ** 2) ** (1/3) * _u.m
+            self._a = (_Earth.k.value / self.n.to_value(u.rad/u.s) ** 2) ** (1/3) * u.m
         return self._a
 
     @property
     def nu(self):
         """True anomaly."""
         if self._nu is None:
-            nu_rad = _M_to_nu(self.M.to_value(_u.rad), self.ecc.to_value(_u.one))
-            self._nu = nu_rad * RAD2DEG * _u.deg
+            nu_rad = _M_to_nu(self.M.to_value(u.rad), self.ecc.to_value(u.one))
+            self._nu = nu_rad * RAD2DEG * u.deg
         return self._nu
 
     @classmethod
@@ -275,16 +269,16 @@ class TLEu(TLE):
             int_desig=line1[9:17],
             epoch_year=line1[18:20],
             epoch_day=float(line1[20:32]),
-            dn_o2=_u.Quantity(float(line1[33:43]), _u_rev / _u.day**2),
-            ddn_o6=_u.Quantity(_parse_float(line1[44:52]), _u_rev / _u.day**3),
-            bstar=_u.Quantity(_parse_float(line1[53:61]), 1 / _u.earthRad),
+            dn_o2=u.Quantity(float(line1[33:43]), u_rev / u.day**2),
+            ddn_o6=u.Quantity(_parse_float(line1[44:52]), u_rev / u.day**3),
+            bstar=u.Quantity(_parse_float(line1[53:61]), 1 / u.earthRad),
             set_num=line1[64:68],
-            inc=_u.Quantity(float(line2[8:16]), _u.deg),
-            raan=_u.Quantity(float(line2[17:25]), _u.deg),
-            ecc=_u.Quantity(_parse_decimal(line2[26:33]), _u.one),
-            argp=_u.Quantity(float(line2[34:42]), _u.deg),
-            M=_u.Quantity(float(line2[43:51]), _u.deg),
-            n=_u.Quantity(float(line2[52:63]), _u_rev / _u.day),
+            inc=u.Quantity(float(line2[8:16]), u.deg),
+            raan=u.Quantity(float(line2[17:25]), u.deg),
+            ecc=u.Quantity(_parse_decimal(line2[26:33]), u.one),
+            argp=u.Quantity(float(line2[34:42]), u.deg),
+            M=u.Quantity(float(line2[43:51]), u.deg),
+            n=u.Quantity(float(line2[52:63]), u_rev / u.day),
             rev_num=line2[63:68])
 
     def to_orbit(self, attractor=_Earth):
