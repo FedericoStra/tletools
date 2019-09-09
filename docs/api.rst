@@ -3,7 +3,7 @@
 API Documentation
 =================
 
-This parto of the documentation covers all the interfaces of :mod:`tle`.
+This part of the documentation covers all the interfaces of :mod:`tle`.
 For guides on how to use them, pleas consult the tutorials.
 
 TLE Classes
@@ -18,6 +18,7 @@ a value with an associated unit taken from :mod:`astropy.units`.
 .. automodule:: tle
 
 .. autoclass:: TLE
+    :members:
 .. autoclass:: TLEu
 
 Module functions

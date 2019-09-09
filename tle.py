@@ -1,8 +1,22 @@
-"""
+'''
 **TLE-tools** is a small library to work with `two-line element set`_ files.
 
 .. _`two-line element set`: https://en.wikipedia.org/wiki/Two-line_element_set
-"""
+
+The module :mod:`tle` defines the class :class:`TLE`.
+
+Example
+-------
+
+>>> tle_string = """
+... ISS (ZARYA)
+... 1 25544U 98067A   19249.04864348  .00001909  00000-0  40858-4 0  9990
+... 2 25544  51.6464 320.1755 0007999  10.9066  53.2893 15.50437522187805
+... """
+>>> tle_lines = tle_string.strip().splitlines()
+>>> TLE.from_lines(*tle_lines)
+TLE(name='ISS (ZARYA)', norad='25544', ..., n=15.50437522, rev_num=18780)
+'''
 
 import attr as _attr
 
@@ -29,6 +43,7 @@ _u_rev = _u.def_unit(['rev', 'revolution'], 2.0 * _np.pi * _u.rad,
 
 
 def _conv_year(s):
+    """Interpret a two-digit year string."""
     if isinstance(s, int):
         return s
     y = int(s)
@@ -36,10 +51,24 @@ def _conv_year(s):
 
 
 def _parse_decimal(s):
-    return float("." + s)
+    """Parse a floating point with implicit leading dot.
+
+    >>> _parse_decimal('378')
+    0.378
+    """
+    return float('.' + s)
 
 
 def _parse_float(s):
+    """Parse a floating point with implicit dot and exponential notation.
+
+    >>> _parse_float(' 12345-3')
+    0.00012345
+    >>> _parse_float('+12345-3')
+    0.00012345
+    >>> _parse_float('-12345-3')
+    -0.00012345
+    """
     return float(s[0] + '.' + s[1:6] + 'e' + s[6:8])
 
 
@@ -81,6 +110,17 @@ def add_epoch(df):
     column ``'epoch'`` is computed.
 
     :param pandas.DataFrame df: :class:`pandas.DataFrame` instance to modify.
+
+    **Example**
+
+    >>> from pandas import DataFrame
+    >>> df = DataFrame([[2018, 31.2931], [2019, 279.3781]],
+    ...                columns=['epoch_year', 'epoch_day'])
+    >>> add_epoch(df)
+    >>> df
+       epoch_year  epoch_day                   epoch
+    0        2018    31.2931 2018-01-31 07:02:03.840
+    1        2019   279.3781 2019-10-06 09:04:27.840
     """
     df['epoch'] = ((df.epoch_year.values - 1970).astype(_dt_dt64_Y)
                    + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
@@ -115,39 +155,39 @@ class TLE:
     are used in the TLE format.
     
     :ivar str name:
-        name of the satellite
+        Name of the satellite.
     :ivar str norad:
-        NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number)
+        NORAD catalog number (https://en.wikipedia.org/wiki/Satellite_Catalog_Number).
     :ivar str classification:
-        'U', 'C', 'S' for unclassified, classified, secret
+        'U', 'C', 'S' for unclassified, classified, secret.
     :ivar str int_desig:
-        international designator (https://en.wikipedia.org/wiki/International_Designator)
+        International designator (https://en.wikipedia.org/wiki/International_Designator),
     :ivar int epoch_year:
-        year of the epoch
+        Year of the epoch.
     :ivar float epoch_day:
-        day of the year plus fraction of the day
+        Day of the year plus fraction of the day.
     :ivar float dn_o2:
-        first time derivative of the mean motion divided by 2
+        First time derivative of the mean motion divided by 2.
     :ivar float ddn_o6:
-        second time derivative of the mean motion divided by 6
+        Second time derivative of the mean motion divided by 6.
     :ivar float bstar:
-        BSTAR coefficient (https://en.wikipedia.org/wiki/BSTAR)
+        BSTAR coefficient (https://en.wikipedia.org/wiki/BSTAR).
     :ivar int set_num:
-        element set number
+        Element set number.
     :ivar float inc:
-        inclination
+        Inclination.
     :ivar float raan:
-        right ascension of the ascending node
+        Right ascension of the ascending node.
     :ivar float ecc:
-        eccentricity
+        Eccentricity.
     :ivar float argp:
-        argument of perigee
+        Argument of perigee.
     :ivar float M:
-        mean anomaly
+        Mean anomaly.
     :ivar float n:
-        mean motion
+        Mean motion.
     :ivar int rev_num:
-        revolution number
+        Revolution number.
     """
 
     # name of the satellite
@@ -270,7 +310,7 @@ class TLEu(TLE):
     """Unitful data class representing a single TLE.
 
     This is a subclass of :class:`TLE`, so refer to that class for a description
-    of the attributes and properties.
+    of the attributes, properties and methods.
 
     The only difference here is that all the attributes are quantities
     (:class:`astropy.units.Quantity`), a type able to represent a value with
@@ -279,14 +319,14 @@ class TLEu(TLE):
 
     @property
     def a(self):
-        """Semi-major axis property."""
+        """Semi-major axis."""
         if self._epoch is None:
             self._a = (_Earth.k.value / self.n.to_value(_u.rad/_u.s) ** 2) ** (1/3) * _u.m
         return self._a
 
     @property
     def nu(self):
-        """True anomaly property."""
+        """True anomaly."""
         if self._nu is None:
             nu_rad = _M_to_nu(self.M.to_value(_u.rad), self.ecc.to_value(_u.one))
             self._nu = nu_rad * RAD2DEG * _u.deg
@@ -294,7 +334,7 @@ class TLEu(TLE):
 
     @classmethod
     def from_lines(cls, name, line1, line2):
-        """Parse a TLE from its constituent lines property."""
+        """Parse a TLE from its constituent lines."""
         return cls(
             name=name,
             norad=line1[2:7],
