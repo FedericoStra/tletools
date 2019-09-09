@@ -22,7 +22,7 @@ copyright = '2019, Federico Stra'
 author = 'Federico Stra'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.2'
+release = '0.2.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -34,6 +34,7 @@ master_doc = 'index'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
     # 'sphinx.ext.napoleon',
     # 'numpydoc',
 ]
@@ -49,6 +50,12 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
+    'astropy': ('https://docs.astropy.org/en/stable/', None),
+    'poliastro': ('https://docs.poliastro.space/en/stable/', None),
+}
 
 # -- Options for HTML output -------------------------------------------------
 

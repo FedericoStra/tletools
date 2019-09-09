@@ -30,7 +30,7 @@ ISS (ZARYA)
 Here is a minimal example on how to load the previous TLE:
 
 ```python
-import tle
+from tletools import tle
 
 tle_string = """
 ISS (ZARYA)
@@ -40,10 +40,10 @@ ISS (ZARYA)
 
 tle_lines = tle_string.strip().splitlines()
 
-t = tle.TLE.from_lines(*tle_lines)
+tle = TLE.from_lines(*tle_lines)
 ```
 
-Then `t` is:
+Then `tle` is:
 
 ```python
 TLE(name='ISS (ZARYA)', norad='25544', classification='U', int_desig='98067A',

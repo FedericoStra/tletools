@@ -1,33 +1,32 @@
 .. _api:
 
 API Documentation
-=================
+*****************
 
-This part of the documentation covers all the interfaces of :mod:`tle`.
+This part of the documentation covers all the interfaces of :mod:`tletools`.
 For guides on how to use them, pleas consult the tutorials.
 
 TLE Classes
------------
+===========
 
-The library offers two classes to represent a single TLE.
-There is the unitless version :class:`TLE`, whose attributes are expressed in the same units
-that are used in the TLE format, and there is the unitful version :class:`TLEu`,
-whose attributes are quantities (:class:`astropy.units.Quantity`), a type able to represent
-a value with an associated unit taken from :mod:`astropy.units`.
+.. automodule:: tletools.tle
 
-.. automodule:: tle
+Interoperability
+================
 
-.. autoclass:: TLE
+Pandas
+------
+
+.. automodule:: tletools.pandas
     :members:
-.. autoclass:: TLEu
 
-Module functions
-----------------
+Poliastro
+---------
 
-.. autofunction:: load_dataframe
+*coming soon*
 
-Convenience functions
-~~~~~~~~~~~~~~~~~~~~~
+Utils
+=====
 
-.. autofunction:: partition
-.. autofunction:: add_epoch
+.. automodule:: tletools.utils
+    :members:

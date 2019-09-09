@@ -1,12 +1,13 @@
 '''
-**TLE-tools** is a small library to work with `two-line element set`_ files.
+The module :mod:`tletools.tle` defines the classes :class:`TLE` and :class:`TLEu`.
 
-.. _`two-line element set`: https://en.wikipedia.org/wiki/Two-line_element_set
+The library offers two classes to represent a single TLE.
+There is the unitless version :class:`TLE`, whose attributes are expressed in the same units
+that are used in the TLE format, and there is the unitful version :class:`TLEu`,
+whose attributes are quantities (:class:`astropy.units.Quantity`), a type able to represent
+a value with an associated unit taken from :mod:`astropy.units`.
 
-The module :mod:`tle` defines the class :class:`TLE`.
-
-Example
--------
+Here is a short example of how you can use them:
 
 >>> tle_string = """
 ... ISS (ZARYA)
@@ -16,12 +17,15 @@ Example
 >>> tle_lines = tle_string.strip().splitlines()
 >>> TLE.from_lines(*tle_lines)
 TLE(name='ISS (ZARYA)', norad='25544', ..., n=15.50437522, rev_num=18780)
+
+.. autoclass:: TLE
+    :members:
+.. autoclass:: TLEu
 '''
 
 import attr as _attr
 
 import numpy as _np
-import pandas as _pd
 
 from poliastro.core.angles import M_to_nu as _M_to_nu
 from poliastro.twobody import Orbit as _Orbit
@@ -30,6 +34,7 @@ from poliastro.bodies import Earth as _Earth
 from astropy.time import Time as _Time
 import astropy.units as _u
 
+from .utils import partition
 
 _dt_dt64_Y = _np.dtype('datetime64[Y]')
 _dt_td64_us = _np.dtype('timedelta64[us]')
@@ -70,78 +75,6 @@ def _parse_float(s):
     -0.00012345
     """
     return float(s[0] + '.' + s[1:6] + 'e' + s[6:8])
-
-
-def partition(iterable, n, rest=False):
-    """Partition an iterable into tuples.
-
-    The iterable `iterable` is progressively consumed `n` items at a time in order to
-    produce tuples of length `n`.
-
-    :param iterable iterable: The iterable to partition.
-    :param int n: Length of the desired tuples.
-    :param bool rest: Whether to return a possibly incomplete tuple at the end.
-    :returns: A generator which yields subsequent n-uples from the original iterable.
-
-    **Examples**
-
-    >>> list(partition(range(8), 3))
-    [(0, 1, 2), (3, 4, 5)]
-    >>> list(partition(range(8), 3, rest=True))
-    [(0, 1, 2), (3, 4, 5), (6, 7)]
-    """
-    it = iter(iterable)
-    while True:
-        res = []
-        try:
-            for _ in range(n):
-                res.append(next(it))
-        except StopIteration:
-            if rest:
-                yield tuple(res)
-            return
-        yield tuple(res)
-
-
-def add_epoch(df):
-    """Add a column ``'epoch'`` to a dataframe.
-
-    `df` must have columns ``'epoch_year'`` and ``'epoch_day'``, from which the
-    column ``'epoch'`` is computed.
-
-    :param pandas.DataFrame df: :class:`pandas.DataFrame` instance to modify.
-
-    **Example**
-
-    >>> from pandas import DataFrame
-    >>> df = DataFrame([[2018, 31.2931], [2019, 279.3781]],
-    ...                columns=['epoch_year', 'epoch_day'])
-    >>> add_epoch(df)
-    >>> df
-       epoch_year  epoch_day                   epoch
-    0        2018    31.2931 2018-01-31 07:02:03.840
-    1        2019   279.3781 2019-10-06 09:04:27.840
-    """
-    df['epoch'] = ((df.epoch_year.values - 1970).astype(_dt_dt64_Y)
-                   + ((df.epoch_day.values - 1) * 86400 * 10**6).astype(_dt_td64_us))
-
-
-def load_dataframe(filename, *, epoch=True):
-    """Load multiple TLEs from one or more files and return a :class:`pandas.DataFrame`."""
-    if isinstance(filename, str):
-        with open(filename) as fp:
-            df = _pd.DataFrame(TLE.from_lines(*l012).asdict()
-                               for l012 in partition(fp, 3))
-            if epoch:
-                add_epoch(df)
-            return df
-    else:
-        df = _pd.concat([TLE.load_dataframe(fn, epoch=False) for fn in filename],
-                        ignore_index=True, join='inner', copy=False)
-        df.drop_duplicates(inplace=True)
-        df.reset_index(drop=True, inplace=True)
-        add_epoch(df)
-        return df
 
 
 @_attr.s

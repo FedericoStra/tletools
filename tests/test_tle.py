@@ -1,6 +1,4 @@
-from tle import TLE
-
-import sys
+from tletools import TLE
 
 
 def test_from_lines(tle_lines):

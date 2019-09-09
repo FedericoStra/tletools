@@ -1,6 +1,6 @@
 import pytest
 
-from tle import TLE
+from tletools import TLE
 
 
 @pytest.fixture
