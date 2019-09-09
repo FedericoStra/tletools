@@ -48,4 +48,4 @@ def add_epoch(df):
     """
     years = (df.epoch_year.values - 1970).astype(dt_dt64_Y)
     days = ((df.epoch_day.values - 1) * 86400 * 1000000).astype(dt_td64_us)
-    df['epoch'] = year + days
+    df['epoch'] = years + days
