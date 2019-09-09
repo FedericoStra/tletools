@@ -4,7 +4,6 @@ import sys
 
 
 def test_from_lines(tle_lines):
-    print(tle_lines, file=sys.stderr)
     t = TLE.from_lines(*tle_lines)
     assert isinstance(t, TLE)
 
