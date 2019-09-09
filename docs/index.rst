@@ -38,7 +38,7 @@ Here is an example TLE::
 
 Here is a minimal example on how to load the previous TLE::
 
-    import tle
+    from tletools import TLE
 
     tle_string = """
     ISS (ZARYA)
@@ -48,7 +48,7 @@ Here is a minimal example on how to load the previous TLE::
 
     tle_lines = tle_string.strip().splitlines()
 
-    t = tle.TLE.from_lines(*tle_lines)
+    t = TLE.from_lines(*tle_lines)
 
 Then ``t`` is::
 
