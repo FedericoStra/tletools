@@ -53,3 +53,10 @@ def partition(iterable, n, rest=False):
                 yield tuple(res)
             return
         yield tuple(res)
+
+
+def _partition(iterable, n):
+    """Partition an iterable into tuples."""
+    it = iter(iterable)
+    z = (it,) * n
+    return zip(*z)
