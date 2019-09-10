@@ -34,7 +34,7 @@ from poliastro.core.angles import M_to_nu as _M_to_nu
 from poliastro.twobody import Orbit as _Orbit
 from poliastro.bodies import Earth as _Earth
 
-from .utils import partition, dt_dt64_Y, dt_td64_us, rev as u_rev
+from .utils import partition, rev as u_rev
 
 
 DEG2RAD = np.pi / 180.
@@ -80,7 +80,7 @@ class TLE:
 
     All the attributes parsed from the TLE are expressed in the same units that
     are used in the TLE format.
-    
+
     :ivar str name:
         Name of the satellite.
     :ivar str norad:
@@ -146,9 +146,9 @@ class TLE:
     def epoch(self):
         """Epoch of the TLE."""
         if self._epoch is None:
-            dt = (np.datetime64(self.epoch_year - 1970, 'Y')
-                  + np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us'))
-            self._epoch = Time(dt, format='datetime64', scale='utc')
+            year = np.datetime64(self.epoch_year - 1970, 'Y')
+            day = np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us')
+            self._epoch = Time(year + day, format='datetime64', scale='utc')
         return self._epoch
 
     @property
