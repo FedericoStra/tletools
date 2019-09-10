@@ -72,7 +72,7 @@ pip install -U TLE-tools
 
 ## Links
 
-- Website: https://github.com/FedericoStra/tletools
+- Website: https://github.com/FedericoStra/tletools/index.html
 - Documentation: https://tletools.readthedocs.io
 - Releases: https://pypi.org/project/TLE-tools
 - Code: https://github.com/FedericoStra/tletools
