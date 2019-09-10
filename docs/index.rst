@@ -72,7 +72,7 @@ Install and update using pip_::
 Links
 -----
 
-- Website: https://github.com/FedericoStra/tletools
+- Website: https://federicostra.github.io/tletools
 - Documentation: https://tletools.readthedocs.io
 - Releases: https://pypi.org/project/TLE-tools
 - Code: https://github.com/FedericoStra/tletools
