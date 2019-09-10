@@ -30,7 +30,7 @@ ISS (ZARYA)
 Here is a minimal example on how to load the previous TLE:
 
 ```python
-from tletools import tle
+from tletools import TLE
 
 tle_string = """
 ISS (ZARYA)
