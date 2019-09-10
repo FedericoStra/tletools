@@ -73,8 +73,8 @@ Links
 -----
 
 - Website: https://github.com/FedericoStra/tletools
-- Documentation: https://tletools.readthedocs.io/
-- Releases: https://pypi.org/project/TLE-tools/
+- Documentation: https://tletools.readthedocs.io
+- Releases: https://pypi.org/project/TLE-tools
 - Code: https://github.com/FedericoStra/tletools
 - Issue tracker: https://github.com/FedericoStra/tletools/issues
 
