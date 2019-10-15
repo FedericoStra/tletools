@@ -1,5 +1,10 @@
 # TLE-tools
 
+![PyPI](https://img.shields.io/pypi/v/TLE-tools)
+![PyPI - License](https://img.shields.io/pypi/l/TLE-tools)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/TLE-tools)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/TLE-tools)
+
 `TLE-tools` is a small library to work with [two-line element
 set](https://en.wikipedia.org/wiki/Two-line_element_set) files.
 
