@@ -35,6 +35,7 @@ master_doc = 'index'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',
     # 'sphinx.ext.napoleon',
     # 'numpydoc',
 ]
