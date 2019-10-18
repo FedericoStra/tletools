@@ -23,7 +23,7 @@ TLE(name='ISS (ZARYA)', norad='25544', ..., n=15.50437522, rev_num=18780)
 .. autoclass:: TLEu
 '''
 
-import attr as attr
+import attr
 
 import numpy as np
 import astropy.units as u
