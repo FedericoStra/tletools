@@ -9,18 +9,19 @@ from .tle import TLE
 from .utils import partition, dt_dt64_Y, dt_td64_us
 
 
-def load_dataframe(filename, *, epoch=True):
+def load_dataframe(filename, *, computed=False, epoch=True):
     """Load multiple TLEs from one or more files and return a :class:`pandas.DataFrame`."""
     if isinstance(filename, str):
         with open(filename) as fp:
-            df = pd.DataFrame(TLE.from_lines(*l012).asdict()
+            df = pd.DataFrame(TLE.from_lines(*l012).asdict(computed=computed)
                               for l012 in partition(fp, 3))
             if epoch:
                 add_epoch(df)
             return df
     else:
-        df = pd.concat([TLE.load_dataframe(fn, epoch=False) for fn in filename],
-                       ignore_index=True, join='inner', copy=False)
+        df = pd.concat(
+            [TLE.load_dataframe(fn, computed=computed, epoch=False) for fn in filename],
+            ignore_index=True, join='inner', copy=False)
         df.drop_duplicates(inplace=True)
         df.reset_index(drop=True, inplace=True)
         add_epoch(df)
