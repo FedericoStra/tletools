@@ -16,7 +16,7 @@ Purpose
 The purpose of the library is to parse TLE sets into convenient
 :class:`TLE <tletools.tle.TLE>` objects, load entire TLE set files into
 :class:`pandas.DataFrame`'s, convert :class:`TLE <tletools.tle.TLE>` objects
-into :class:`poliastro.twobody.Orbit`'s, and more.
+into :class:`poliastro.twobody.orbit.Orbit`'s, and more.
 
 From Wikipedia_:
 
