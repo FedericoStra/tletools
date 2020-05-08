@@ -6,7 +6,6 @@ There is the unitless version :class:`TLE`, whose attributes are expressed in th
 that are used in the TLE format, and there is the unitful version :class:`TLEu`,
 whose attributes are quantities (:class:`astropy.units.Quantity`), a type able to represent
 a value with an associated unit taken from :mod:`astropy.units`.
-
 Here is a short example of how you can use them:
 
 >>> tle_string = """
@@ -30,7 +29,7 @@ import astropy.units as u
 from astropy.time import Time
 
 # Maybe remove them from here?
-from poliastro.core.angles import M_to_nu as _M_to_nu
+from poliastro.core.angles import E_to_nu as _E_to_nu, M_to_E as _M_to_E
 from poliastro.twobody import Orbit as _Orbit
 from poliastro.bodies import Earth as _Earth
 
@@ -162,7 +161,8 @@ class TLE:
     def nu(self):
         """True anomaly."""
         if self._nu is None:
-            self._nu = _M_to_nu(self.M * DEG2RAD, self.ecc) * RAD2DEG
+            M = self.M * DEG2RAD
+            self._nu = _E_to_nu(_M_to_E(M, self.ecc), self.ecc) * RAD2DEG
         return self._nu
 
     @classmethod
