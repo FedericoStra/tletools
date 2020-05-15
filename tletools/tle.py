@@ -154,7 +154,7 @@ class TLE:
     @property
     def a(self):
         """Semi-major axis."""
-        if self._epoch is None:
+        if self._a is None:
             self._a = (_Earth.k.value / (self.n * np.pi / 43200) ** 2) ** (1/3) / 1000
         return self._a
 
