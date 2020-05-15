@@ -256,7 +256,7 @@ class TLEu(TLE):
     @property
     def a(self):
         """Semi-major axis."""
-        if self._epoch is None:
+        if self._a is None:
             self._a = (_Earth.k.value / self.n.to_value(u.rad/u.s) ** 2) ** (1/3) * u.m
         return self._a
 
