@@ -161,7 +161,10 @@ class TLE:
     def nu(self):
         """True anomaly."""
         if self._nu is None:
-            M = self.M * DEG2RAD
+
+            # Make sure the mean anomaly (M) is in -pi..pi range.
+            M = ((self.M + 180) % 360 - 180) * DEG2RAD
+
             self._nu = _E_to_nu(_M_to_E(M, self.ecc), self.ecc) * RAD2DEG
         return self._nu
 
