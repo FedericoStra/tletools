@@ -29,11 +29,10 @@ import astropy.units as u
 from astropy.time import Time
 
 # Maybe remove them from here?
-from poliastro.core.angles import M_to_E as _M_to_E, E_to_nu as _E_to_nu
 from poliastro.twobody import Orbit as _Orbit
 from poliastro.bodies import Earth as _Earth
 
-from .utils import partition, rev as u_rev
+from .utils import partition, rev as u_rev, M_to_nu as _M_to_nu
 
 
 DEG2RAD = np.pi / 180.
@@ -163,7 +162,7 @@ class TLE:
         if self._nu is None:
             # Make sure the mean anomaly is between -pi and pi
             M = ((self.M + 180) % 360 - 180) * DEG2RAD
-            self._nu = _E_to_nu(_M_to_E(M, self.ecc), self.ecc) * RAD2DEG
+            self._nu = _M_to_nu(M, self.ecc) * RAD2DEG
         return self._nu
 
     @classmethod
@@ -267,7 +266,7 @@ class TLEu(TLE):
             # Make sure the mean anomaly is between -pi and pi
             M = ((self.M.to_value(u.rad) + 180) % 360 - 180) * DEG2RAD
             ecc = self.ecc.to_value(u.one)
-            nu_rad = _E_to_nu(_M_to_E(M, ecc), ecc)
+            nu_rad = _M_to_nu(M, ecc)
             self._nu = nu_rad * RAD2DEG * u.deg
         return self._nu
 
