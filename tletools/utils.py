@@ -1,5 +1,6 @@
 import numpy as np
 import astropy.units as u
+from poliastro.core.angles import M_to_E as _M_to_E, E_to_nu as _E_to_nu
 
 #: :class:`numpy.dtype` for a date expressed as a year.
 dt_dt64_Y = np.dtype('datetime64[Y]')
@@ -15,6 +16,10 @@ rev = u.def_unit(
     doc="revolution: angular measurement, a full turn or rotation")
 
 u.add_enabled_units(rev)
+
+
+def M_to_nu(M, ecc):
+    return _E_to_nu(_M_to_E(M, ecc), ecc)
 
 
 def partition(iterable, n, rest=False):
