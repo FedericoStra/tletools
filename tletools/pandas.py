@@ -71,7 +71,7 @@ def load_dataframe(filename, *, computed=False, epoch=True):
             return df
     else:
         df = pd.concat(
-            [TLE.load_dataframe(fn, computed=computed, epoch=False) for fn in filename],
+            [load_dataframe(fn, computed=computed, epoch=False) for fn in filename],
             ignore_index=True, join='inner', copy=False)
         df.drop_duplicates(inplace=True)
         df.reset_index(drop=True, inplace=True)
