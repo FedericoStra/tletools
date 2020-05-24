@@ -22,7 +22,7 @@ copyright = '2019, Federico Stra'
 author = 'Federico Stra'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.0'
+release = '0.2.3'
 
 
 # -- General configuration ---------------------------------------------------
