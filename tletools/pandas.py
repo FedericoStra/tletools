@@ -4,22 +4,22 @@ two-line element set files into :class:`pandas.DataFrame`'s.'
 
 Given a file ``oneweb.txt`` with the following contents::
 
-    ONEWEB-0012             
+    ONEWEB-0012
     1 44057U 19010A   19290.71624163  .00000233  00000-0  58803-3 0  9997
     2 44057  87.9055  22.9851 0002022  94.9226 265.2135 13.15296315 30734
-    ONEWEB-0010             
+    ONEWEB-0010
     1 44058U 19010B   19290.71785289  .00000190  00000-0  47250-3 0  9991
     2 44058  87.9054  22.9846 0002035  97.1333 263.0028 13.15294565 30783
-    ONEWEB-0008             
+    ONEWEB-0008
     1 44059U 19010C   19290.86676214 -.00000034  00000-0 -12353-3 0  9990
     2 44059  87.9055  22.9563 0001967  95.9628 264.1726 13.15300216 30897
-    ONEWEB-0007             
+    ONEWEB-0007
     1 44060U 19010D   19290.87154896  .00000182  00000-0  45173-3 0  9998
     2 44060  87.9067  22.9618 0001714  97.9802 262.1523 13.15299021 30927
-    ONEWEB-0006             
+    ONEWEB-0006
     1 44061U 19010E   19290.72095254  .00000179  00000-0  44426-3 0  9991
     2 44061  87.9066  22.9905 0001931  95.0539 265.0811 13.15294588 30940
-    ONEWEB-0011             
+    ONEWEB-0011
     1 44062U 19010F   19291.17894923  .00000202  00000-0  50450-3 0  9993
     2 44062  87.9056  22.8943 0002147  94.8298 265.3077 13.15300820 31002
 
@@ -45,6 +45,7 @@ import pandas as pd
 from .tle import TLE
 from .utils import partition, dt_dt64_Y, dt_td64_us
 
+
 def load_dataframe(filename, *, computed=False, epoch=True):
     """Load multiple TLEs from one or more files and return a :class:`pandas.DataFrame`.
 
@@ -55,7 +56,7 @@ def load_dataframe(filename, *, computed=False, epoch=True):
     **Examples**
 
     >>> load_dataframe("oneweb.txt") # doctest: +SKIP
-    
+
     >>> load_dataframe(["oneweb.txt", "starlink.txt"]) # doctest: +SKIP
 
     >>> from glob import glob
