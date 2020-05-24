@@ -19,6 +19,32 @@ u.add_enabled_units(rev)
 
 
 def M_to_nu(M, ecc):
+    """True anomaly from mean anomaly.
+
+    .. versionadded:: 0.2.3
+
+    :param float M: Mean anomaly in radians.
+    :param float ecc: Eccentricity.
+    :returns: `nu`, the true anomaly, between -π and π radians.
+
+    **Warning**
+
+    The mean anomaly must be between -π and π radians.
+    The eccentricity must be less than 1.
+
+    **Examples**
+
+    >>> M_to_nu(0.25, 0.)
+    0.25
+
+    >>> M_to_nu(0.25, 0.5)
+    0.804298286591367
+
+    >>> M_to_nu(5., 0.)
+    Traceback (most recent call last):
+        ...
+    AssertionError
+    """
     return _E_to_nu(_M_to_E(M, ecc), ecc)
 
 
