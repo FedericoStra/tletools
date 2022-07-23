@@ -23,6 +23,7 @@ TLE(name='ISS (ZARYA)', norad='25544', ..., n=15.50437522, rev_num=18780)
 '''
 
 import attr
+import datetime
 
 import numpy as np
 import astropy.units as u
@@ -137,6 +138,7 @@ class TLE:
 
     def __attrs_post_init__(self):
         self._epoch = None
+        self._epoch_datetime = None
         self._a = None
         self._nu = None
 
@@ -148,6 +150,15 @@ class TLE:
             day = np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us')
             self._epoch = Time(year + day, format='datetime64', scale='utc')
         return self._epoch
+
+    @property
+    def epoch_datetime(self):
+        """Epoch of the TLE as a datetime.datetime object"""
+        if self._epoch_datetime is None:
+            self._epoch_datetime = datetime.datetime(
+                self.epoch_year, 1, 1, tzinfo=datetime.timezone.utc
+            ) + datetime.timedelta(days=self.epoch_day)
+        return self._epoch_datetime
 
     @property
     def a(self):
