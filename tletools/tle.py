@@ -142,7 +142,7 @@ class TLE:
 
     @property
     def epoch(self):
-        """Epoch of the TLE."""
+        """Epoch of the TLE, as an :class:`astropy.time.Time` object."""
         if self._epoch is None:
             year = np.datetime64(self.epoch_year - 1970, 'Y')
             day = np.timedelta64(int((self.epoch_day - 1) * 86400 * 10**6), 'us')
